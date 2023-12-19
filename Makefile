@@ -15,3 +15,5 @@ test-coverage:
 
 gendiff:
 	node bin/gendiff.js
+
+.PHONY: test
