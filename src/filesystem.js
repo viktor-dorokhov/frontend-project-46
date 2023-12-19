@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 
-export const getFileContent= (filepath) => {
+export const getFileContent = (filepath) => {
   let absolutePath = filepath;
   if (!path.isAbsolute(absolutePath)) {
     absolutePath = path.resolve(absolutePath);
@@ -13,6 +13,6 @@ export const getFileContent= (filepath) => {
     console.log(err.message);
     return null;
   }
-}
+};
 
 export const getExt = (filepath) => path.extname(filepath);

@@ -1,38 +1,6 @@
 import _ from 'lodash';
 import { getExt, getFileContent } from './filesystem.js';
 
-const genDiff = (filepath1, filepath2, format = 'stylish') => {
-  const ext1 = getExt(filepath1);
-  if (ext1 !== '.json') {
-    console.log('Please use the following file formats: json');
-    return null;
-  }
-  const fileData1 = getFileContent(filepath1);
-  if (!fileData1) {
-    return null;
-  }
-  const ext2 = getExt(filepath2);
-  if (ext2 !== '.json') {
-    console.log('Please use the following file formats: json');
-    return null;
-  }
-  const fileData2 = getFileContent(filepath2);
-  if (!fileData2) {
-    return null;
-  }
-  const json1 = parseJSON(fileData1);
-  if (!json1) {
-    return null;
-  }
-  const json2 = parseJSON(fileData2);
-  if (!json2) {
-    return null;
-  }
-  const result = getDiffObjects(json1, json2);
-
-  return result;
-}
-
 const parseJSON = (data) => {
   try {
     const json = JSON.parse(data);
@@ -41,7 +9,7 @@ const parseJSON = (data) => {
     console.error(err);
     return null;
   }
-}
+};
 
 const getDiffLine = (key, value, diffChar) => `${diffChar || ' '} ${key}: ${value}`;
 
@@ -65,6 +33,34 @@ const getDiffObjects = (object1, object2) => {
   }, []).join('\n');
 
   return result;
-}
+};
+
+const genDiff = (filepath1, filepath2, format = 'stylish') => {
+  const ext1 = getExt(filepath1);
+  const ext2 = getExt(filepath2);
+  if (ext1 !== '.json' || ext2 !== '.json') {
+    console.log('Please use the following file types: json');
+    return null;
+  }
+  const fileData1 = getFileContent(filepath1);
+  if (!fileData1) {
+    return null;
+  }
+  const fileData2 = getFileContent(filepath2);
+  if (!fileData2) {
+    return null;
+  }
+  const json1 = parseJSON(fileData1);
+  if (!json1) {
+    return null;
+  }
+  const json2 = parseJSON(fileData2);
+  if (!json2) {
+    return null;
+  }
+  const result = getDiffObjects(json1, json2, format);
+
+  return result;
+};
 
 export default genDiff;
