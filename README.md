@@ -8,6 +8,9 @@
 [![Actions Status](https://github.com/viktor-dorokhov/frontend-project-46/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/viktor-dorokhov/frontend-project-46/actions)
 ### CodeClimate Maintainability
 [![Maintainability](https://api.codeclimate.com/v1/badges/d2dee2ce319ef6b6c93d/maintainability)](https://codeclimate.com/github/viktor-dorokhov/frontend-project-46/maintainability)
+### CodeClimate Test Coverage
+[![Test Coverage](https://api.codeclimate.com/v1/badges/d2dee2ce319ef6b6c93d/test_coverage)](https://codeclimate.com/github/viktor-dorokhov/frontend-project-46/test_coverage)
+
 
 ## Установка
 
