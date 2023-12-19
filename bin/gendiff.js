@@ -12,7 +12,10 @@ program
   .option('-f, --format <type>', 'output format')
   .arguments('<filepath1> <filepath2>')
   .action((first, second, {format}) => {
-    genDiff(first, second, format);
+    const result = genDiff(first, second, format);
+    if (result) {
+      console.log(result);
+    }
   });
 
 program.parse();

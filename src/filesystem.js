@@ -10,7 +10,8 @@ export const getFileContent= (filepath) => {
     const data = fs.readFileSync(absolutePath, 'utf8');
     return data;
   } catch (err) {
-    console.error(err);
+    console.log(err.message);
+    return null;
   }
 }
 
