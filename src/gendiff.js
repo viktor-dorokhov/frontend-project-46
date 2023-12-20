@@ -1,5 +1,5 @@
 import { getObjectsDiff } from './diff.js';
-import { getDataObject } from './parsers.js';
+import getDataObject from './parsers.js';
 
 const genDiff = (filepath1, filepath2, format = 'stylish') => {
   const object1 = getDataObject(filepath1);

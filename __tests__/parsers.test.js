@@ -1,7 +1,7 @@
 import { fileURLToPath } from 'url';
 import { dirname, sep } from 'path';
 import { test, expect } from '@jest/globals';
-import { getDataObject, parseJSON, parseYAML } from '../src/parsers.js';
+import getDataObject from '../src/parsers.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -31,39 +31,4 @@ test('getDataObject incorrect ext', () => {
 
 test('getDataObject file not found', () => {
   expect(getDataObject(`${dirA}file0.json`)).toBeNull();
-});
-
-test('parseJSON correct data', () => {
-  expect(parseJSON(`{
-    "host": "hexlet.io",
-    "timeout": 50,
-    "proxy": "123.234.53.22",
-    "follow": false
-  }`, 'file1.json')).toEqual(testObject);
-});
-
-test('parseJSON incorrect data', () => {
-  expect(parseJSON(`{
-    "host": "hexlet.io",
-    "timeout": 50,
-    "proxy": "123.234.53.22",
-    "follow": false`, 'file_wrong.json')).toBeNull();
-});
-
-test('parseYAML correct data', () => {
-  expect(parseYAML(`---
-  host: hexlet.io
-  timeout: 50
-  proxy: 123.234.53.22
-  follow: false
-  `, 'file1.yml')).toEqual(testObject);
-});
-
-test('parseYAML incorrect data', () => {
-  expect(parseYAML(`---
-  host: hexlet.io
-  timeout: :
-  proxy: 123.234.53.22
-  follow: false
-  `, 'file_wrong.yml')).toBeNull();
 });

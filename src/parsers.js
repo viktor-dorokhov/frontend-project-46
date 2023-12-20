@@ -3,27 +3,7 @@ import { getExt, getFileContent } from './filesystem.js';
 
 const allowedExts = ['.json', '.yml', '.yaml'];
 
-export const parseJSON = (data, filepath) => {
-  try {
-    const result = JSON.parse(data);
-    return result;
-  } catch (err) {
-    console.log(`Wrong JSON format. Please check file: ${filepath}`);
-    return null;
-  }
-};
-
-export const parseYAML = (data, filepath) => {
-  try {
-    const result = yaml.load(data);
-    return result;
-  } catch (err) {
-    console.log(`Wrong YAML format. Please check file: ${filepath}`);
-    return null;
-  }
-};
-
-export const getDataObject = (filepath) => {
+const getDataObject = (filepath) => {
   const ext = getExt(filepath).toLowerCase();
   if (!allowedExts.includes(ext)) {
     console.log('Please use the following file types: json, yaml');
@@ -33,10 +13,24 @@ export const getDataObject = (filepath) => {
   if (!fileData) {
     return null;
   }
+  let parseFn;
+  let type;
   switch (ext) {
     case '.json':
-      return parseJSON(fileData);
+      parseFn = JSON.parse;
+      type = 'JSON';
+      break;
     default:
-      return parseYAML(fileData);
+      parseFn = yaml.load;
+      type = 'YAML';
+  }
+  try {
+    const result = parseFn(fileData);
+    return result;
+  } catch (err) {
+    console.log(`Incorrect ${type} content. Please check file: ${filepath}`);
+    return null;
   }
 };
+
+export default getDataObject;
