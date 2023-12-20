@@ -1,40 +1,33 @@
 import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import { dirname, sep } from 'path';
 import { test, expect } from '@jest/globals';
 import genDiff from '../src/gendiff.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const dir = `${__dirname}/../__fixtures__/`;
-
-test('gendiff absolute path success', () => {
-  expect(genDiff(`${dir}file1.json`, `${dir}file2.json`)).toEqual(
-    `- follow: false
+const dirA = `${__dirname}${sep}..${sep}__fixtures__${sep}`;
+const dirR = `__fixtures__${sep}`;
+const testResult1 = `- follow: false
   host: hexlet.io
 - proxy: 123.234.53.22
 - timeout: 50
 + timeout: 20
-+ verbose: true`,
-  );
++ verbose: true`;
+
+test('gendiff absolute path success', () => {
+  expect(genDiff(`${dirA}file1.json`, `${dirA}file2.json`)).toEqual(testResult1);
 });
 
 test('gendiff relative path success', () => {
-  expect(genDiff('__fixtures__/file1.json', '__fixtures__/file2.json')).toEqual(
-    `- follow: false
-  host: hexlet.io
-- proxy: 123.234.53.22
-- timeout: 50
-+ timeout: 20
-+ verbose: true`,
-  );
+  expect(genDiff(`${dirR}file1.json`, `${dirR}file2.json`)).toEqual(testResult1);
 });
 
 test('file1 not found', () => {
-  expect(genDiff(`${dir}file3.json`, `${dir}file2.json`)).toBeNull();
+  expect(genDiff(`${dirA}file3.json`, `${dirA}file2.json`)).toBeNull();
 });
 
 test('file2 not found', () => {
-  expect(genDiff(`${dir}file1.json`, `${dir}file4.json`)).toBeNull();
+  expect(genDiff(`${dirA}file1.json`, `${dirA}file4.json`)).toBeNull();
 });
 
 test('wrong files type', () => {
@@ -44,6 +37,6 @@ test('wrong files type', () => {
 });
 
 test('wrong files content', () => {
-  expect(genDiff(`${dir}file1.json`, `${dir}file_wrong.json`)).toBeNull();
-  expect(genDiff(`${dir}file_wrong.json`, `${dir}file2.json`)).toBeNull();
+  expect(genDiff(`${dirA}file1.json`, `${dirA}file_wrong.json`)).toBeNull();
+  expect(genDiff(`${dirA}file_wrong.json`, `${dirA}file2.json`)).toBeNull();
 });

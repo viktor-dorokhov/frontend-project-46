@@ -1,27 +1,5 @@
 import { test, expect } from '@jest/globals';
-import { parseJSON, getDiffLine } from '../src/diff.js';
-
-test('parseJSON correct data', () => {
-  expect(parseJSON(`{
-    "host": "hexlet.io",
-    "timeout": 50,
-    "proxy": "123.234.53.22",
-    "follow": false
-  }`)).toEqual({
-    host: 'hexlet.io',
-    timeout: 50,
-    proxy: '123.234.53.22',
-    follow: false,
-  });
-});
-
-test('parseJSON incorrect data', () => {
-  expect(parseJSON(`{
-    "host": "hexlet.io",
-    "timeout": 50,
-    "proxy": "123.234.53.22",
-    "follow": false`)).toBeNull();
-});
+import { getDiffLine } from '../src/diff.js';
 
 test('getDiffLine', () => {
   expect(getDiffLine('timeout', 50, '+')).toEqual('+ timeout: 50');

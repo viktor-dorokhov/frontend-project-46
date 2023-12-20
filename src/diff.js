@@ -1,15 +1,5 @@
 import _ from 'lodash';
 
-export const parseJSON = (data, filepath) => {
-  try {
-    const json = JSON.parse(data);
-    return json;
-  } catch (err) {
-    console.log(`Wrong JSON. Please check file: ${filepath}`);
-    return null;
-  }
-};
-
 export const getDiffLine = (key, value, diffChar) => `${diffChar || ' '} ${key}: ${value}`;
 
 export const getObjectsDiff = (object1, object2) => {
