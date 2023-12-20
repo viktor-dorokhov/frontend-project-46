@@ -2,7 +2,7 @@
 
 «Вычислитель отличий» — программа, определяющая разницу между двумя структурами данных.
 
-[![Actions Status](https://github.com/viktor-dorokhov/frontend-project-46/actions/workflows/code-check.yml/badge.svg)
+[![Actions Status](https://github.com/viktor-dorokhov/frontend-project-46/actions/workflows/code-check.yml/badge.svg)](https://github.com/viktor-dorokhov/frontend-project-46/actions)
 [![Actions Status](https://github.com/viktor-dorokhov/frontend-project-46/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/viktor-dorokhov/frontend-project-46/actions)
 [![Maintainability](https://api.codeclimate.com/v1/badges/d2dee2ce319ef6b6c93d/maintainability)](https://codeclimate.com/github/viktor-dorokhov/frontend-project-46/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/d2dee2ce319ef6b6c93d/test_coverage)](https://codeclimate.com/github/viktor-dorokhov/frontend-project-46/test_coverage)
