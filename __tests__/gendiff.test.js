@@ -1,25 +1,21 @@
-import { fileURLToPath } from 'url';
-import { dirname, sep } from 'path';
 import { test, expect } from '@jest/globals';
 import genDiff from '../src/gendiff.js';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const dirA = `${__dirname}${sep}..${sep}__fixtures__${sep}`;
-const dirR = `__fixtures__${sep}`;
-const testResult1 = `- follow: false
-  host: hexlet.io
-- proxy: 123.234.53.22
-- timeout: 50
-+ timeout: 20
-+ verbose: true`;
+import { dirA, dirR, testDiffTextStylish } from '../__fixtures__/constants.js';
 
 test('gendiff absolute path success', () => {
-  expect(genDiff(`${dirA}file1.json`, `${dirA}file2.json`)).toEqual(testResult1);
+  expect(genDiff(`${dirA}file1.json`, `${dirA}file2.json`)).toEqual(testDiffTextStylish);
 });
 
 test('gendiff relative path success', () => {
-  expect(genDiff(`${dirR}file1.json`, `${dirR}file2.json`)).toEqual(testResult1);
+  expect(genDiff(`${dirR}file1.json`, `${dirR}file2.json`)).toEqual(testDiffTextStylish);
+});
+
+test('gendiff yaml files', () => {
+  expect(genDiff(`${dirR}file1.yml`, `${dirR}file2.yml`)).toEqual(testDiffTextStylish);
+});
+
+test('gendiff color test', () => {
+  expect(genDiff(`${dirR}file1.json`, `${dirR}file2.json`, 'stylish', true)).not.toBeNull();
 });
 
 test('file1 not found', () => {
@@ -39,4 +35,8 @@ test('wrong files type', () => {
 test('wrong files content', () => {
   expect(genDiff(`${dirA}file1.json`, `${dirA}file_wrong.json`)).toBeNull();
   expect(genDiff(`${dirA}file_wrong.json`, `${dirA}file2.json`)).toBeNull();
+});
+
+test('wrong format', () => {
+  expect(genDiff(`${dirA}file1.json`, `${dirA}file2.json`, 'some')).toBeNull();
 });

@@ -9,10 +9,11 @@ program
   .version('0.0.1');
 
 program
-  .option('-f, --format <type>', 'output format')
+  .option('-f, --format <type>', 'output format', 'stylish')
+  .option('-c, --color', 'output in color')
   .arguments('<filepath1> <filepath2>')
-  .action((first, second, { format }) => {
-    const result = genDiff(first, second, format);
+  .action((first, second, { format, color }) => {
+    const result = genDiff(first, second, format, !!color);
     if (result) {
       console.log(result);
     }
