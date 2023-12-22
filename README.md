@@ -18,6 +18,60 @@ make install
 npm link
 ```
 
+### Использование
+```
+gendiff [опции] аргументы
+```
+
+### Аргументы:
+```
+<filepath1> <filepath2> - относительные или абсолютные пути для двух файлов
+                          поддерживаемые форматы: JSON (.json) и YAML (.yml, .yaml)
+```
+
+### Опции:
+```
+-V, --version        вывод версии программы
+-f, --format <type>  формат вывода, возможные значения: "stylish", "plain", "json" (по умолчанию: "stylish")
+-c, --color          цветная подсветка для форматов "stylish" и "plain"
+-h, --help           вывод справки по программе
+```
+
+## Примеры:
+
+### Стандартный вывод в формате "stylish":
+```
+gendiff file1.json file2.json
+```
+
+### Вывод в формате "stylish" с цветной подсветкой
+```
+gendiff file1.json file2.json -с
+```
+
+### Вывод в формате "plain"
+```
+gendiff file1.json file2.json -f plain
+```
+
+### Вывод в формате "plain" с цветной подсветкой
+```
+gendiff file1.json file2.json -f plain -с
+```
+
+### Вывод в формате "json"
+```
+gendiff file1.json file2.json -f json
+```
+
+### Разные форматы файлов
+Файлы разных форматов можно сочетать
+```
+gendiff file1.yml file2.json
+gendiff file1.json file2.yml
+gendiff file1.yml file2.yml
+```
+
 ## Демо:
 
-[![asciicast](https://asciinema.org/a/628394.svg)](https://asciinema.org/a/628394)
+[![asciicast](https://asciinema.org/a/628416.svg)](https://asciinema.org/a/628416)
