@@ -3,10 +3,7 @@ import fs from 'fs';
 import getMsg from './message.js';
 
 export const getFileContent = (filepath) => {
-  let absolutePath = filepath;
-  if (!path.isAbsolute(absolutePath)) {
-    absolutePath = path.resolve(absolutePath);
-  }
+  const absolutePath = path.isAbsolute(filepath) ? filepath : path.resolve(filepath);
   try {
     const data = fs.readFileSync(absolutePath, 'utf8');
     return data;

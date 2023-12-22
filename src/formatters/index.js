@@ -4,19 +4,15 @@ import formatPlain from './plain.js';
 import formatJSON from './json.js';
 
 export default (diffObject, formatType, inColor) => {
-  let result = null;
   switch (formatType) {
     case 'stylish':
-      result = formatStylish(diffObject, inColor);
-      break;
+      return formatStylish(diffObject, inColor);
     case 'plain':
-      result = formatPlain(diffObject, inColor);
-      break;
+      return formatPlain(diffObject, inColor);
     case 'json':
-      result = formatJSON(diffObject);
-      break;
+      return formatJSON(diffObject);
     default:
       console.log(getMsg('formatTypeError', 'stylish, plain, json'));
+      return null;
   }
-  return result;
 };

@@ -3,20 +3,17 @@ import * as colors from './colors.js';
 import getMsg from '../message.js';
 
 const getPlainValue = (value) => {
-  let result = '';
   if (value === null) {
-    result = 'null';
-  } else if (_.isObject(value)) {
-    result = '[complex value]';
-  } else {
-    const type = typeof value;
-    if (type === 'string') {
-      result = `'${value}'`;
-    } else {
-      result = value.toString();
-    }
+    return 'null';
   }
-  return result;
+  if (_.isObject(value)) {
+    return '[complex value]';
+  }
+  const type = typeof value;
+  if (type === 'string') {
+    return `'${value}'`;
+  }
+  return value.toString();
 };
 
 const getPropertyName = (key, path) => {

@@ -15,19 +15,8 @@ const getDataObject = (filepath) => {
   if (!fileData) {
     return null;
   }
-  let result;
-  let type;
-  switch (ext) {
-    case '.json':
-      result = parseJSON(fileData);
-      type = 'JSON';
-      break;
-    case '.yml':
-    case '.yaml':
-      result = parseYAML(fileData);
-      type = 'YAML';
-    // no default
-  }
+  const type = ext === '.json' ? 'JSON' : 'YAML';
+  const result = type === 'JSON' ? parseJSON(fileData) : parseYAML(fileData);
   if (result === null) {
     console.log(getMsg('parseError', type, filepath));
   }
