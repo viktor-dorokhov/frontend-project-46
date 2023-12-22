@@ -1,5 +1,6 @@
-import yaml from 'js-yaml';
-import { getExt, getFileContent } from './filesystem.js';
+import { getExt, getFileContent } from '../filesystem.js';
+import parseJSON from './json.js';
+import parseYAML from './yaml.js';
 
 const allowedExts = ['.json', '.yml', '.yaml'];
 
@@ -13,24 +14,23 @@ const getDataObject = (filepath) => {
   if (!fileData) {
     return null;
   }
-  let parseFn;
+  let result;
   let type;
   switch (ext) {
     case '.json':
-      parseFn = JSON.parse;
+      result = parseJSON(fileData);
       type = 'JSON';
       break;
-    default:
-      parseFn = yaml.load;
+    case '.yml':
+    case '.yaml':
+      result = parseYAML(fileData);
       type = 'YAML';
+    // no default
   }
-  try {
-    const result = parseFn(fileData);
-    return result;
-  } catch (err) {
+  if (result === null) {
     console.log(`Incorrect ${type} content. Please check file: ${filepath}`);
-    return null;
   }
+  return result;
 };
 
 export default getDataObject;

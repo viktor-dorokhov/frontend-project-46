@@ -1,6 +1,6 @@
 import { test, expect } from '@jest/globals';
 import genDiff from '../src/gendiff.js';
-import { dirA, dirR, testDiffTextStylish } from '../__fixtures__/constants.js';
+import { dirA, dirR, testDiffTextStylish, testDiffTextStylishColor, testDiffTextStylishColor2 } from '../__fixtures__/constants.js';
 
 test('gendiff absolute path success', () => {
   expect(genDiff(`${dirA}file1.json`, `${dirA}file2.json`)).toEqual(testDiffTextStylish);
@@ -15,15 +15,15 @@ test('gendiff yaml files', () => {
 });
 
 test('gendiff color test', () => {
-  expect(genDiff(`${dirR}file1.json`, `${dirR}file2.json`, 'stylish', true)).not.toBeNull();
+  expect(genDiff(`${dirR}file1.json`, `${dirR}file2.json`, 'stylish', true)).toEqual(testDiffTextStylishColor);
 });
 
 test('file1 not found', () => {
-  expect(genDiff(`${dirA}file3.json`, `${dirA}file2.json`)).toBeNull();
+  expect(genDiff(`${dirA}file11.json`, `${dirA}file2.json`)).toBeNull();
 });
 
 test('file2 not found', () => {
-  expect(genDiff(`${dirA}file1.json`, `${dirA}file4.json`)).toBeNull();
+  expect(genDiff(`${dirA}file1.json`, `${dirA}file22.json`)).toBeNull();
 });
 
 test('wrong files type', () => {

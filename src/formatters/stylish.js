@@ -1,15 +1,10 @@
 /* eslint-disable object-curly-newline */
 
 import _ from 'lodash';
-import { getDiffItem } from './objects.js';
+import { getDiffItem } from '../objects.js';
+import * as colors from './colors.js';
 
-const COLOR_GREEN = '\x1b[32m';
-const COLOR_RED = '\x1b[31m';
-const COLOR_RESET = '\x1b[0m';
-
-const formatStylish = (diffObject, inColor) => {
-  // console.log(inColor)
-  // console.log(JSON.stringify(diffObject, null ,2));
+export default (diffObject, inColor) => {
   const iter = (iterNode) => (
     iterNode.flatMap((item) => {
       const { key, value, depth, diffChar } = item;
@@ -24,10 +19,10 @@ const formatStylish = (diffObject, inColor) => {
       const keyStr = key ? `${key}: ` : '';
       let colorStrBegin = '';
       if (inColor && !!diffChar) {
-        colorStrBegin = diffChar === '+' ? COLOR_GREEN : COLOR_RED;
+        colorStrBegin = diffChar === '+' ? colors.FgGreen : colors.FgRed;
       }
-      const colorStrEnd = colorStrBegin ? COLOR_RESET : '';
-      let resultStr = `${colorStrBegin}${shiftStr}${diffStr}${keyStr}`;
+      const colorStrEnd = colorStrBegin ? colors.Reset : '';
+      let resultStr = `${shiftStr}${colorStrBegin}${diffStr}${keyStr}`;
       if (Array.isArray(value)) {
         return [
           ...acc,
@@ -55,25 +50,3 @@ const formatStylish = (diffObject, inColor) => {
   const ii = iter(diffObject);
   return ii.join('\n');
 };
-
-/* const formatPlain = (diffObject) => {
-  const result = JSON.stringify(diffObject, null, 2);
-  return result;
-}; */
-
-const formatDiffObject = (diffObject, formatType, inColor) => {
-  let result = null;
-  switch (formatType) {
-    case 'stylish':
-      result = formatStylish(diffObject, inColor);
-      break;
-    /* case 'plain':
-      result = formatPlain(diffObject, inColor);
-      break; */
-    default:
-      console.log('Please use the following format types: stylish'); // plain
-  }
-  return result;
-};
-
-export default formatDiffObject;

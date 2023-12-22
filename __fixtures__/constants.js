@@ -171,6 +171,273 @@ export const testObject2 = {
   ],
 };
 
+export const testDiffObject = [
+  {
+    key: '',
+    value: [
+      {
+        key: 'common',
+        value: [
+          {
+            key: 'follow',
+            value: false,
+            depth: 2,
+            diffChar: '+',
+          },
+          {
+            key: 'setting1',
+            value: 'Value 1',
+            depth: 2,
+            diffChar: '',
+          },
+          {
+            key: 'setting2',
+            value: 200,
+            depth: 2,
+            diffChar: '-',
+          },
+          {
+            key: 'setting3',
+            value: [
+              true,
+              null,
+            ],
+            depth: 2,
+            diffChar: '~',
+          },
+          {
+            key: 'setting4',
+            value: 'blah blah',
+            depth: 2,
+            diffChar: '+',
+          },
+          {
+            key: 'setting5',
+            value: [
+              {
+                key: 'key5',
+                value: 'value5',
+                depth: 3,
+                diffChar: '',
+              },
+            ],
+            depth: 2,
+            diffChar: '+',
+          },
+          {
+            key: 'setting6',
+            value: [
+              {
+                key: 'doge',
+                value: [
+                  {
+                    key: 'wow',
+                    value: [
+                      '',
+                      'so much',
+                    ],
+                    depth: 4,
+                    diffChar: '~',
+                  },
+                ],
+                depth: 3,
+                diffChar: '',
+              },
+              {
+                key: 'key',
+                value: 'value',
+                depth: 3,
+                diffChar: '',
+              },
+              {
+                key: 'ops',
+                value: 'vops',
+                depth: 3,
+                diffChar: '+',
+              },
+            ],
+            depth: 2,
+            diffChar: '',
+          },
+        ],
+        depth: 1,
+        diffChar: '',
+      },
+      {
+        key: 'group1',
+        value: [
+          {
+            key: 'baz',
+            value: [
+              'bas',
+              'bars',
+            ],
+            depth: 2,
+            diffChar: '~',
+          },
+          {
+            key: 'foo',
+            value: 'bar',
+            depth: 2,
+            diffChar: '',
+          },
+          {
+            key: 'nest',
+            value: [
+              [
+                {
+                  key: 'key',
+                  value: 'value',
+                  depth: 3,
+                  diffChar: '',
+                },
+              ],
+              'str',
+            ],
+            depth: 2,
+            diffChar: '~',
+          },
+        ],
+        depth: 1,
+        diffChar: '',
+      },
+      {
+        key: 'group2',
+        value: [
+          {
+            key: 'abc',
+            value: 12345,
+            depth: 2,
+            diffChar: '',
+          },
+          {
+            key: 'deep',
+            value: [
+              {
+                key: 'id',
+                value: 45,
+                depth: 3,
+                diffChar: '',
+              },
+            ],
+            depth: 2,
+            diffChar: '',
+          },
+        ],
+        depth: 1,
+        diffChar: '-',
+      },
+      {
+        key: 'group3',
+        value: [
+          {
+            key: 'deep',
+            value: [
+              {
+                key: 'id',
+                value: [
+                  {
+                    key: 'number',
+                    value: 45,
+                    depth: 4,
+                    diffChar: '',
+                  },
+                ],
+                depth: 3,
+                diffChar: '',
+              },
+            ],
+            depth: 2,
+            diffChar: '',
+          },
+          {
+            key: 'fee',
+            value: 100500,
+            depth: 2,
+            diffChar: '',
+          },
+        ],
+        depth: 1,
+        diffChar: '+',
+      },
+      {
+        key: 'list1',
+        value: [
+          {
+            array: [
+              {
+                key: '',
+                value: 1,
+                depth: 2,
+                diffChar: '',
+              },
+              {
+                key: '',
+                value: '2',
+                depth: 2,
+                diffChar: '',
+              },
+              {
+                key: '',
+                value: false,
+                depth: 2,
+                diffChar: '',
+              },
+            ],
+          },
+          {
+            array: [
+              {
+                key: '',
+                value: 1,
+                depth: 2,
+                diffChar: '',
+              },
+              {
+                key: '',
+                value: '2',
+                depth: 2,
+                diffChar: '',
+              },
+              {
+                key: '',
+                value: true,
+                depth: 2,
+                diffChar: '',
+              },
+            ],
+          },
+        ],
+        depth: 1,
+        diffChar: '~',
+      },
+      {
+        key: 'list2',
+        value: {
+          array: [
+            {
+              key: '',
+              value: 'first',
+              depth: 2,
+              diffChar: '',
+            },
+            {
+              key: '',
+              value: 'second',
+              depth: 2,
+              diffChar: '',
+            },
+          ],
+        },
+        depth: 1,
+        diffChar: '',
+      }
+    ],
+    depth: 0,
+    diffChar: '',
+  },
+];
+
 export const testDiffTextStylishColor = `{
     common: {
       \x1b[32m+ follow: false\x1b[0m
@@ -228,4 +495,13 @@ export const testDiffTextStylishColor = `{
         first
         second
     ]
+}`;
+
+export const testDiffTextStylishColor2 = `{
+  \x1b[31m- follow: false\x1b[0m
+    host: hexlet.io
+  \x1b[31m- proxy: 123.234.53.22\x1b[0m
+  \x1b[31m- timeout: 50\x1b[0m
+  \x1b[32m+ timeout: 20\x1b[0m
+  \x1b[32m+ verbose: true\x1b[0m
 }`;

@@ -1,6 +1,6 @@
 import { getObjectsDiff } from './objects.js';
-import formatDiffObject from './formatters.js';
-import getDataObject from './parsers.js';
+import formatDiffObject from './formatters/index.js';
+import getDataObject from './parsers/index.js';
 
 const genDiff = (filepath1, filepath2, format = 'stylish', inColor = false) => {
   const object1 = getDataObject(filepath1);
