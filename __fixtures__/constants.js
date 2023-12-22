@@ -431,14 +431,14 @@ export const testDiffObject = [
         },
         depth: 1,
         diffChar: '',
-      }
+      },
     ],
     depth: 0,
     diffChar: '',
   },
 ];
 
-export const testDiffTextStylishColor = `{
+export const testDiffTextStylishColored = `{
     common: {
       \x1b[32m+ follow: false\x1b[0m
         setting1: Value 1
@@ -497,7 +497,7 @@ export const testDiffTextStylishColor = `{
     ]
 }`;
 
-export const testDiffTextStylishColor2 = `{
+export const testDiffTextStylishColored2 = `{
   \x1b[31m- follow: false\x1b[0m
     host: hexlet.io
   \x1b[31m- proxy: 123.234.53.22\x1b[0m
@@ -505,3 +505,29 @@ export const testDiffTextStylishColor2 = `{
   \x1b[32m+ timeout: 20\x1b[0m
   \x1b[32m+ verbose: true\x1b[0m
 }`;
+
+export const testDiffTextPlain = `Property 'common.follow' was added with value: false
+Property 'common.setting2' was removed
+Property 'common.setting3' was updated. From true to null
+Property 'common.setting4' was added with value: 'blah blah'
+Property 'common.setting5' was added with value: [complex value]
+Property 'common.setting6.doge.wow' was updated. From '' to 'so much'
+Property 'common.setting6.ops' was added with value: 'vops'
+Property 'group1.baz' was updated. From 'bas' to 'bars'
+Property 'group1.nest' was updated. From [complex value] to 'str'
+Property 'group2' was removed
+Property 'group3' was added with value: [complex value]
+Property 'list1' was updated. From [complex value] to [complex value]`;
+
+export const testDiffTextPlainColored = `\x1b[32mProperty 'common.follow' was added with value: false\x1b[0m
+\x1b[31mProperty 'common.setting2' was removed\x1b[0m
+Property 'common.setting3' was updated. From \x1b[31mtrue\x1b[0m to \x1b[32mnull\x1b[0m
+\x1b[32mProperty 'common.setting4' was added with value: 'blah blah'\x1b[0m
+\x1b[32mProperty 'common.setting5' was added with value: [complex value]\x1b[0m
+Property 'common.setting6.doge.wow' was updated. From \x1b[31m''\x1b[0m to \x1b[32m'so much'\x1b[0m
+\x1b[32mProperty 'common.setting6.ops' was added with value: 'vops'\x1b[0m
+Property 'group1.baz' was updated. From \x1b[31m'bas'\x1b[0m to \x1b[32m'bars'\x1b[0m
+Property 'group1.nest' was updated. From \x1b[31m[complex value]\x1b[0m to \x1b[32m'str'\x1b[0m
+\x1b[31mProperty 'group2' was removed\x1b[0m
+\x1b[32mProperty 'group3' was added with value: [complex value]\x1b[0m
+Property 'list1' was updated. From \x1b[31m[complex value]\x1b[0m to \x1b[32m[complex value]\x1b[0m`;

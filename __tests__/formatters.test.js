@@ -1,9 +1,13 @@
 import { test, expect } from '@jest/globals';
 import formatDiffObject from '../src/formatters/index.js';
-import { testDiffObject, testDiffTextStylish } from '../__fixtures__/constants.js';
+import { testDiffObject, testDiffTextStylish, testDiffTextPlain } from '../__fixtures__/constants.js';
 
-test('formatDiffObject correct type stylish', () => {
+test('formatDiffObject type stylish', () => {
   expect(formatDiffObject(testDiffObject, 'stylish')).toEqual(testDiffTextStylish);
+});
+
+test('formatDiffObject type plain', () => {
+  expect(formatDiffObject(testDiffObject, 'plain')).toEqual(testDiffTextPlain);
 });
 
 test('formatDiffObject incorrect type', () => {

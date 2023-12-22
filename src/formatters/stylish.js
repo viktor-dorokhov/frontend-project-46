@@ -4,6 +4,9 @@ import _ from 'lodash';
 import { getDiffItem } from '../objects.js';
 import * as colors from './colors.js';
 
+const shiftCount = 4;
+const shiftChar = ' ';
+
 export default (diffObject, inColor) => {
   const iter = (iterNode) => (
     iterNode.flatMap((item) => {
@@ -14,8 +17,8 @@ export default (diffObject, inColor) => {
       }
       return item;
     }).reduce((acc, { key, value, depth, diffChar }) => {
-      const shiftStr = depth > 0 ? ' '.repeat(depth * 4 - 2) : '';
-      const diffStr = depth > 0 ? `${diffChar || ' '} ` : '';
+      const diffStr = depth > 0 ? `${diffChar || shiftChar}${diffChar ? ' ' : shiftChar}` : '';
+      const shiftStr = depth > 0 ? shiftChar.repeat(depth * shiftCount - diffStr.length) : '';
       const keyStr = key ? `${key}: ` : '';
       let colorStrBegin = '';
       if (inColor && !!diffChar) {
@@ -28,7 +31,7 @@ export default (diffObject, inColor) => {
           ...acc,
           `${resultStr}{`,
           iter(value),
-          `${' '.repeat(depth * 4)}}${colorStrEnd}`,
+          `${shiftChar.repeat(depth * shiftCount)}}${colorStrEnd}`,
         ];
       }
       if (_.isObject(value) && value.array) {
@@ -36,7 +39,7 @@ export default (diffObject, inColor) => {
           ...acc,
           `${resultStr}[`,
           iter(value.array),
-          `${' '.repeat(depth * 4)}]${colorStrEnd}`,
+          `${shiftChar.repeat(depth * shiftCount)}]${colorStrEnd}`,
         ];
       }
       if (value === null) {
@@ -47,6 +50,6 @@ export default (diffObject, inColor) => {
       return [...acc, `${resultStr}${colorStrEnd}`];
     }, []).flat()
   );
-  const ii = iter(diffObject);
-  return ii.join('\n');
+
+  return iter(diffObject).join('\n');
 };

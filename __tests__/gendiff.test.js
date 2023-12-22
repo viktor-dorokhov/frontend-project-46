@@ -1,6 +1,13 @@
 import { test, expect } from '@jest/globals';
 import genDiff from '../src/gendiff.js';
-import { dirA, dirR, testDiffTextStylish, testDiffTextStylishColor, testDiffTextStylishColor2 } from '../__fixtures__/constants.js';
+import {
+  dirA,
+  dirR,
+  testDiffTextStylish,
+  testDiffTextStylishColored,
+  testDiffTextPlain,
+  testDiffTextPlainColored,
+} from '../__fixtures__/constants.js';
 
 test('gendiff absolute path success', () => {
   expect(genDiff(`${dirA}file1.json`, `${dirA}file2.json`)).toEqual(testDiffTextStylish);
@@ -14,8 +21,16 @@ test('gendiff yaml files', () => {
   expect(genDiff(`${dirR}file1.yml`, `${dirR}file2.yml`)).toEqual(testDiffTextStylish);
 });
 
-test('gendiff color test', () => {
-  expect(genDiff(`${dirR}file1.json`, `${dirR}file2.json`, 'stylish', true)).toEqual(testDiffTextStylishColor);
+test('gendiff format stylish colored', () => {
+  expect(genDiff(`${dirR}file1.json`, `${dirR}file2.json`, 'stylish', true)).toEqual(testDiffTextStylishColored);
+});
+
+test('gendiff format plain', () => {
+  expect(genDiff(`${dirR}file1.json`, `${dirR}file2.json`, 'plain')).toEqual(testDiffTextPlain);
+});
+
+test('gendiff format plain colored', () => {
+  expect(genDiff(`${dirR}file1.json`, `${dirR}file2.json`, 'plain', true)).toEqual(testDiffTextPlainColored);
 });
 
 test('file1 not found', () => {

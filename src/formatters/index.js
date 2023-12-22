@@ -1,11 +1,7 @@
 /* eslint-disable object-curly-newline */
 
 import formatStylish from './stylish.js';
-
-/* const formatPlain = (diffObject) => {
-  const result = JSON.stringify(diffObject, null, 2);
-  return result;
-}; */
+import formatPlain from './plain.js';
 
 export default (diffObject, formatType, inColor) => {
   let result = null;
@@ -13,11 +9,11 @@ export default (diffObject, formatType, inColor) => {
     case 'stylish':
       result = formatStylish(diffObject, inColor);
       break;
-    /* case 'plain':
+    case 'plain':
       result = formatPlain(diffObject, inColor);
-      break; */
+      break;
     default:
-      console.log('Please use the following format types: stylish'); // plain
+      console.log('Please use the following format types: stylish, plain');
   }
   return result;
 };

@@ -2,7 +2,7 @@ import { getObjectsDiff } from './objects.js';
 import formatDiffObject from './formatters/index.js';
 import getDataObject from './parsers/index.js';
 
-const genDiff = (filepath1, filepath2, format = 'stylish', inColor = false) => {
+const genDiff = (filepath1, filepath2, formatType = 'stylish', inColor = false) => {
   const object1 = getDataObject(filepath1);
   if (!object1) {
     return null;
@@ -13,7 +13,7 @@ const genDiff = (filepath1, filepath2, format = 'stylish', inColor = false) => {
   }
   const diffObject = getObjectsDiff(object1, object2);
 
-  return formatDiffObject(diffObject, format, inColor);
+  return formatDiffObject(diffObject, formatType, inColor);
 };
 
 export default genDiff;

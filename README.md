@@ -20,4 +20,4 @@ npm link
 
 ## Демо:
 
-[![asciicast](https://asciinema.org/a/627668.svg)](https://asciinema.org/a/627668)
+[![asciicast](https://asciinema.org/a/628394.svg)](https://asciinema.org/a/628394)
