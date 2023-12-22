@@ -32,32 +32,25 @@ export default (diffObject, inColor) => {
   };
   const iter = (iterNode, path = []) => (
     iterNode.reduce((acc, { key, value, state }) => {
-      let result = '';
       const propertyName = getPropertyName(key, path);
       switch (state) {
         case 'removed':
-          result = makeColored(getMsg('propRemove', `'${propertyName}'`), 'FgRed');
-          break;
+          return [...acc, makeColored(getMsg('propRemove', [`'${propertyName}'`]), 'FgRed')];
         case 'added':
-          result = makeColored(getMsg('propAdd', `'${propertyName}'`, getPlainValue(value)), 'FgGreen');
-          break;
+          return [...acc, makeColored(getMsg('propAdd', [`'${propertyName}'`, getPlainValue(value)]), 'FgGreen')];
         case 'updated': {
           const [value1, value2] = value;
-          result = getMsg(
+          return [...acc, getMsg(
             'propUpdate',
-            `'${propertyName}'`,
-            makeColored(getPlainValue(value1), 'FgRed'),
-            makeColored(getPlainValue(value2), 'FgGreen'),
-          );
-          break;
+            [`'${propertyName}'`,
+              makeColored(getPlainValue(value1), 'FgRed'),
+              makeColored(getPlainValue(value2), 'FgGreen')],
+          )];
         }
         default:
           if (Array.isArray(value)) {
-            result = iter(value, [...path, key]);
+            return [...acc, iter(value, [...path, key])];
           }
-      }
-      if (result) {
-        return [...acc, result];
       }
       return [...acc];
     }, []).flat()

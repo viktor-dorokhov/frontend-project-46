@@ -12,7 +12,7 @@ export default (diffObject, formatType, inColor) => {
     case 'json':
       return formatJSON(diffObject);
     default:
-      console.log(getMsg('formatTypeError', 'stylish, plain, json'));
+      console.log(getMsg('formatTypeError', ['stylish, plain, json']));
       return null;
   }
 };

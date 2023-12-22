@@ -8,7 +8,7 @@ export const getFileContent = (filepath) => {
     const data = fs.readFileSync(absolutePath, 'utf8');
     return data;
   } catch (err) {
-    console.log(getMsg('fileError', filepath));
+    console.log(getMsg('fileError', [filepath]));
     return null;
   }
 };

@@ -7,6 +7,12 @@ const shiftChar = ' ';
 
 const diffStateMap = new Map([['added', '+'], ['removed', '-']]);
 const getDiffChar = (state) => diffStateMap.get(state);
+const getColorStrBegin = (inColor, diffChar) => {
+  if (inColor && diffChar) {
+    return diffChar === '+' ? colors.FgGreen : colors.FgRed;
+  }
+  return '';
+};
 
 export default (diffObject, inColor) => {
   const iter = (iterNode, depth) => (
@@ -23,29 +29,22 @@ export default (diffObject, inColor) => {
       const fullShiftCount = depth * shiftCount;
       const shiftStr = depth > 0 ? shiftChar.repeat(fullShiftCount - diffStr.length) : '';
       const keyStr = key ? `${key}: ` : '';
-      let colorStrBegin = '';
-      if (inColor && diffChar) {
-        colorStrBegin = diffChar === '+' ? colors.FgGreen : colors.FgRed;
-      }
+      const colorStrBegin = getColorStrBegin(inColor, diffChar);
       const colorStrEnd = colorStrBegin ? colors.Reset : '';
-      let resultStr = `${shiftStr}${colorStrBegin}${diffStr}${keyStr}`;
+      const startLineStr = `${shiftStr}${colorStrBegin}${diffStr}${keyStr}`;
       if (_.isObject(value)) {
         const isArray = Array.isArray(value);
         const bracketBegin = isArray ? '{' : '[';
         const bracketEnd = isArray ? '}' : ']';
         return [
           ...acc,
-          `${resultStr}${bracketBegin}`,
+          `${startLineStr}${bracketBegin}`,
           iter(isArray ? value : value.array, depth + 1),
           `${shiftChar.repeat(fullShiftCount)}${bracketEnd}${colorStrEnd}`,
         ];
       }
-      if (value === null) {
-        resultStr += 'null';
-      } else {
-        resultStr += value.toString();
-      }
-      return [...acc, `${resultStr}${colorStrEnd}`];
+      const valueStr = value === null ? 'null' : value.toString();
+      return [...acc, `${startLineStr}${valueStr}${colorStrEnd}`];
     }, []).flat()
   );
 

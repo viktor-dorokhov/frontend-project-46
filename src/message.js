@@ -8,6 +8,6 @@ const messages = {
   formatTypeError: 'Please use the following format types: %1',
 };
 
-export default (code, ...values) => (
+export default (code, values) => (
   values.reduce((acc, str, index) => acc.replace(`%${index + 1}`, str), messages[code])
 );
