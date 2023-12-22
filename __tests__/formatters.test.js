@@ -10,6 +10,10 @@ test('formatDiffObject type plain', () => {
   expect(formatDiffObject(testDiffObject, 'plain')).toEqual(testDiffTextPlain);
 });
 
+test('formatDiffObject type json', () => {
+  expect(formatDiffObject(testDiffObject, 'json')).toEqual(JSON.stringify(testDiffObject));
+});
+
 test('formatDiffObject incorrect type', () => {
   expect(formatDiffObject(testDiffObject, 'some')).toBeNull();
 });

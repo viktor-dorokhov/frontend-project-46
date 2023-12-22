@@ -1,4 +1,5 @@
 import { getExt, getFileContent } from '../filesystem.js';
+import getMsg from '../message.js';
 import parseJSON from './json.js';
 import parseYAML from './yaml.js';
 
@@ -7,7 +8,7 @@ const allowedExts = ['.json', '.yml', '.yaml'];
 const getDataObject = (filepath) => {
   const ext = getExt(filepath).toLowerCase();
   if (!allowedExts.includes(ext)) {
-    console.log('Please use the following file types: json, yaml');
+    console.log(getMsg('fileTypeError', 'json, yaml'));
     return null;
   }
   const fileData = getFileContent(filepath);
@@ -28,7 +29,7 @@ const getDataObject = (filepath) => {
     // no default
   }
   if (result === null) {
-    console.log(`Incorrect ${type} content. Please check file: ${filepath}`);
+    console.log(getMsg('parseError', type, filepath));
   }
   return result;
 };

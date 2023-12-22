@@ -12,7 +12,6 @@ const genDiff = (filepath1, filepath2, formatType = 'stylish', inColor = false) 
     return null;
   }
   const diffObject = getObjectsDiff(object1, object2);
-
   return formatDiffObject(diffObject, formatType, inColor);
 };
 

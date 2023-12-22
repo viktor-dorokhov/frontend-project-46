@@ -173,268 +173,224 @@ export const testObject2 = {
 
 export const testDiffObject = [
   {
-    key: '',
+    key: 'common',
     value: [
       {
-        key: 'common',
+        key: 'follow',
+        value: false,
+        state: 'added',
+      },
+      {
+        key: 'setting1',
+        value: 'Value 1',
+        state: '',
+      },
+      {
+        key: 'setting2',
+        value: 200,
+        state: 'removed',
+      },
+      {
+        key: 'setting3',
+        value: [
+          true,
+          null,
+        ],
+        state: 'updated',
+      },
+      {
+        key: 'setting4',
+        value: 'blah blah',
+        state: 'added',
+      },
+      {
+        key: 'setting5',
         value: [
           {
-            key: 'follow',
-            value: false,
-            depth: 2,
-            diffChar: '+',
+            key: 'key5',
+            value: 'value5',
+            state: '',
           },
+        ],
+        state: 'added',
+      },
+      {
+        key: 'setting6',
+        value: [
           {
-            key: 'setting1',
-            value: 'Value 1',
-            depth: 2,
-            diffChar: '',
-          },
-          {
-            key: 'setting2',
-            value: 200,
-            depth: 2,
-            diffChar: '-',
-          },
-          {
-            key: 'setting3',
-            value: [
-              true,
-              null,
-            ],
-            depth: 2,
-            diffChar: '~',
-          },
-          {
-            key: 'setting4',
-            value: 'blah blah',
-            depth: 2,
-            diffChar: '+',
-          },
-          {
-            key: 'setting5',
+            key: 'doge',
             value: [
               {
-                key: 'key5',
-                value: 'value5',
-                depth: 3,
-                diffChar: '',
-              },
-            ],
-            depth: 2,
-            diffChar: '+',
-          },
-          {
-            key: 'setting6',
-            value: [
-              {
-                key: 'doge',
+                key: 'wow',
                 value: [
-                  {
-                    key: 'wow',
-                    value: [
-                      '',
-                      'so much',
-                    ],
-                    depth: 4,
-                    diffChar: '~',
-                  },
+                  '',
+                  'so much',
                 ],
-                depth: 3,
-                diffChar: '',
-              },
-              {
-                key: 'key',
-                value: 'value',
-                depth: 3,
-                diffChar: '',
-              },
-              {
-                key: 'ops',
-                value: 'vops',
-                depth: 3,
-                diffChar: '+',
+                state: 'updated',
               },
             ],
-            depth: 2,
-            diffChar: '',
+            state: '',
+          },
+          {
+            key: 'key',
+            value: 'value',
+            state: '',
+          },
+          {
+            key: 'ops',
+            value: 'vops',
+            state: 'added',
           },
         ],
-        depth: 1,
-        diffChar: '',
-      },
-      {
-        key: 'group1',
-        value: [
-          {
-            key: 'baz',
-            value: [
-              'bas',
-              'bars',
-            ],
-            depth: 2,
-            diffChar: '~',
-          },
-          {
-            key: 'foo',
-            value: 'bar',
-            depth: 2,
-            diffChar: '',
-          },
-          {
-            key: 'nest',
-            value: [
-              [
-                {
-                  key: 'key',
-                  value: 'value',
-                  depth: 3,
-                  diffChar: '',
-                },
-              ],
-              'str',
-            ],
-            depth: 2,
-            diffChar: '~',
-          },
-        ],
-        depth: 1,
-        diffChar: '',
-      },
-      {
-        key: 'group2',
-        value: [
-          {
-            key: 'abc',
-            value: 12345,
-            depth: 2,
-            diffChar: '',
-          },
-          {
-            key: 'deep',
-            value: [
-              {
-                key: 'id',
-                value: 45,
-                depth: 3,
-                diffChar: '',
-              },
-            ],
-            depth: 2,
-            diffChar: '',
-          },
-        ],
-        depth: 1,
-        diffChar: '-',
-      },
-      {
-        key: 'group3',
-        value: [
-          {
-            key: 'deep',
-            value: [
-              {
-                key: 'id',
-                value: [
-                  {
-                    key: 'number',
-                    value: 45,
-                    depth: 4,
-                    diffChar: '',
-                  },
-                ],
-                depth: 3,
-                diffChar: '',
-              },
-            ],
-            depth: 2,
-            diffChar: '',
-          },
-          {
-            key: 'fee',
-            value: 100500,
-            depth: 2,
-            diffChar: '',
-          },
-        ],
-        depth: 1,
-        diffChar: '+',
-      },
-      {
-        key: 'list1',
-        value: [
-          {
-            array: [
-              {
-                key: '',
-                value: 1,
-                depth: 2,
-                diffChar: '',
-              },
-              {
-                key: '',
-                value: '2',
-                depth: 2,
-                diffChar: '',
-              },
-              {
-                key: '',
-                value: false,
-                depth: 2,
-                diffChar: '',
-              },
-            ],
-          },
-          {
-            array: [
-              {
-                key: '',
-                value: 1,
-                depth: 2,
-                diffChar: '',
-              },
-              {
-                key: '',
-                value: '2',
-                depth: 2,
-                diffChar: '',
-              },
-              {
-                key: '',
-                value: true,
-                depth: 2,
-                diffChar: '',
-              },
-            ],
-          },
-        ],
-        depth: 1,
-        diffChar: '~',
-      },
-      {
-        key: 'list2',
-        value: {
-          array: [
-            {
-              key: '',
-              value: 'first',
-              depth: 2,
-              diffChar: '',
-            },
-            {
-              key: '',
-              value: 'second',
-              depth: 2,
-              diffChar: '',
-            },
-          ],
-        },
-        depth: 1,
-        diffChar: '',
+        state: '',
       },
     ],
-    depth: 0,
-    diffChar: '',
+    state: '',
+  },
+  {
+    key: 'group1',
+    value: [
+      {
+        key: 'baz',
+        value: [
+          'bas',
+          'bars',
+        ],
+        state: 'updated',
+      },
+      {
+        key: 'foo',
+        value: 'bar',
+        state: '',
+      },
+      {
+        key: 'nest',
+        value: [
+          [
+            {
+              key: 'key',
+              value: 'value',
+              state: '',
+            },
+          ],
+          'str',
+        ],
+        state: 'updated',
+      },
+    ],
+    state: '',
+  },
+  {
+    key: 'group2',
+    value: [
+      {
+        key: 'abc',
+        value: 12345,
+        state: '',
+      },
+      {
+        key: 'deep',
+        value: [
+          {
+            key: 'id',
+            value: 45,
+            state: '',
+          },
+        ],
+        state: '',
+      },
+    ],
+    state: 'removed',
+  },
+  {
+    key: 'group3',
+    value: [
+      {
+        key: 'deep',
+        value: [
+          {
+            key: 'id',
+            value: [
+              {
+                key: 'number',
+                value: 45,
+                state: '',
+              },
+            ],
+            state: '',
+          },
+        ],
+        state: '',
+      },
+      {
+        key: 'fee',
+        value: 100500,
+        state: '',
+      },
+    ],
+    state: 'added',
+  },
+  {
+    key: 'list1',
+    value: [
+      {
+        array: [
+          {
+            key: '',
+            value: 1,
+            state: '',
+          },
+          {
+            key: '',
+            value: '2',
+            state: '',
+          },
+          {
+            key: '',
+            value: false,
+            state: '',
+          },
+        ],
+      },
+      {
+        array: [
+          {
+            key: '',
+            value: 1,
+            state: '',
+          },
+          {
+            key: '',
+            value: '2',
+            state: '',
+          },
+          {
+            key: '',
+            value: true,
+            state: '',
+          },
+        ],
+      },
+    ],
+    state: 'updated',
+  },
+  {
+    key: 'list2',
+    value: {
+      array: [
+        {
+          key: '',
+          value: 'first',
+          state: '',
+        },
+        {
+          key: '',
+          value: 'second',
+          state: '',
+        },
+      ],
+    },
+    state: '',
   },
 ];
 

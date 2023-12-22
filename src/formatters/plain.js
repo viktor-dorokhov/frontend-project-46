@@ -1,5 +1,3 @@
-/* eslint-disable object-curly-newline */
-
 import _ from 'lodash';
 import * as colors from './colors.js';
 import getMsg from '../message.js';
@@ -36,17 +34,17 @@ export default (diffObject, inColor) => {
     return str;
   };
   const iter = (iterNode, path = []) => (
-    iterNode.reduce((acc, { key, value, diffChar }) => {
+    iterNode.reduce((acc, { key, value, state }) => {
       let result = '';
       const propertyName = getPropertyName(key, path);
-      switch (diffChar) {
-        case '-':
+      switch (state) {
+        case 'removed':
           result = makeColored(getMsg('propRemove', `'${propertyName}'`), 'FgRed');
           break;
-        case '+':
+        case 'added':
           result = makeColored(getMsg('propAdd', `'${propertyName}'`, getPlainValue(value)), 'FgGreen');
           break;
-        case '~': {
+        case 'updated': {
           const [value1, value2] = value;
           result = getMsg(
             'propUpdate',
@@ -58,7 +56,7 @@ export default (diffObject, inColor) => {
         }
         default:
           if (Array.isArray(value)) {
-            result = iter(value, key ? [...path, key] : path);
+            result = iter(value, [...path, key]);
           }
       }
       if (result) {

@@ -1,5 +1,3 @@
-/* eslint-disable object-curly-newline */
-
 import _ from 'lodash';
 import { getDiffItem } from '../objects.js';
 import * as colors from './colors.js';
@@ -7,39 +5,39 @@ import * as colors from './colors.js';
 const shiftCount = 4;
 const shiftChar = ' ';
 
+const diffStateMap = new Map([['added', '+'], ['removed', '-']]);
+const getDiffChar = (state) => diffStateMap.get(state);
+
 export default (diffObject, inColor) => {
-  const iter = (iterNode) => (
+  const iter = (iterNode, depth) => (
     iterNode.flatMap((item) => {
-      const { key, value, depth, diffChar } = item;
-      if (diffChar === '~') {
+      const { key, value, state } = item;
+      if (state === 'updated') {
         const [value1, value2] = value;
-        return [getDiffItem(key, value1, depth, '-'), getDiffItem(key, value2, depth, '+')];
+        return [getDiffItem(key, value1, 'removed'), getDiffItem(key, value2, 'added')];
       }
       return item;
-    }).reduce((acc, { key, value, depth, diffChar }) => {
+    }).reduce((acc, { key, value, state }) => {
+      const diffChar = getDiffChar(state);
       const diffStr = depth > 0 ? `${diffChar || shiftChar}${diffChar ? ' ' : shiftChar}` : '';
-      const shiftStr = depth > 0 ? shiftChar.repeat(depth * shiftCount - diffStr.length) : '';
+      const fullShiftCount = depth * shiftCount;
+      const shiftStr = depth > 0 ? shiftChar.repeat(fullShiftCount - diffStr.length) : '';
       const keyStr = key ? `${key}: ` : '';
       let colorStrBegin = '';
-      if (inColor && !!diffChar) {
+      if (inColor && diffChar) {
         colorStrBegin = diffChar === '+' ? colors.FgGreen : colors.FgRed;
       }
       const colorStrEnd = colorStrBegin ? colors.Reset : '';
       let resultStr = `${shiftStr}${colorStrBegin}${diffStr}${keyStr}`;
-      if (Array.isArray(value)) {
+      if (_.isObject(value)) {
+        const isArray = Array.isArray(value);
+        const bracketBegin = isArray ? '{' : '[';
+        const bracketEnd = isArray ? '}' : ']';
         return [
           ...acc,
-          `${resultStr}{`,
-          iter(value),
-          `${shiftChar.repeat(depth * shiftCount)}}${colorStrEnd}`,
-        ];
-      }
-      if (_.isObject(value) && value.array) {
-        return [
-          ...acc,
-          `${resultStr}[`,
-          iter(value.array),
-          `${shiftChar.repeat(depth * shiftCount)}]${colorStrEnd}`,
+          `${resultStr}${bracketBegin}`,
+          iter(isArray ? value : value.array, depth + 1),
+          `${shiftChar.repeat(fullShiftCount)}${bracketEnd}${colorStrEnd}`,
         ];
       }
       if (value === null) {
@@ -51,5 +49,5 @@ export default (diffObject, inColor) => {
     }, []).flat()
   );
 
-  return iter(diffObject).join('\n');
+  return iter([getDiffItem('', diffObject, 0, '')], 0).join('\n');
 };

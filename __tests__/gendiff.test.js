@@ -33,25 +33,25 @@ test('gendiff format plain colored', () => {
   expect(genDiff(`${dirR}file1.json`, `${dirR}file2.json`, 'plain', true)).toEqual(testDiffTextPlainColored);
 });
 
-test('file1 not found', () => {
+test('gendiff file1 not found', () => {
   expect(genDiff(`${dirA}file11.json`, `${dirA}file2.json`)).toBeNull();
 });
 
-test('file2 not found', () => {
+test('gendiff file2 not found', () => {
   expect(genDiff(`${dirA}file1.json`, `${dirA}file22.json`)).toBeNull();
 });
 
-test('wrong files type', () => {
+test('gendiff wrong files type', () => {
   expect(genDiff('file1.json', 'file2.txt')).toBeNull();
   expect(genDiff('file1.docx', 'file2.json')).toBeNull();
   expect(genDiff('file1', 'file2')).toBeNull();
 });
 
-test('wrong files content', () => {
+test('gendiff wrong files content', () => {
   expect(genDiff(`${dirA}file1.json`, `${dirA}file_wrong.json`)).toBeNull();
   expect(genDiff(`${dirA}file_wrong.json`, `${dirA}file2.json`)).toBeNull();
 });
 
-test('wrong format', () => {
+test('gendiff wrong format', () => {
   expect(genDiff(`${dirA}file1.json`, `${dirA}file2.json`, 'some')).toBeNull();
 });

@@ -1,7 +1,7 @@
-/* eslint-disable object-curly-newline */
-
+import getMsg from '../message.js';
 import formatStylish from './stylish.js';
 import formatPlain from './plain.js';
+import formatJSON from './json.js';
 
 export default (diffObject, formatType, inColor) => {
   let result = null;
@@ -12,8 +12,11 @@ export default (diffObject, formatType, inColor) => {
     case 'plain':
       result = formatPlain(diffObject, inColor);
       break;
+    case 'json':
+      result = formatJSON(diffObject);
+      break;
     default:
-      console.log('Please use the following format types: stylish, plain');
+      console.log(getMsg('formatTypeError', 'stylish, plain, json'));
   }
   return result;
 };
