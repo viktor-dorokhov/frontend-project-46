@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import * as colors from './colors.js';
+import * as colors from '../colors.js';
 import getMsg from '../message.js';
 
 const getPlainValue = (value) => {
@@ -31,13 +31,13 @@ export default (diffObject, inColor) => {
     return str;
   };
   const iter = (iterNode, path = []) => (
-    iterNode.reduce((acc, { key, value, state }) => {
+    iterNode.reduce((acc, { key, value, type }) => {
       const propertyName = getPropertyName(key, path);
-      switch (state) {
-        case 'removed':
-          return [...acc, makeColored(getMsg('propRemove', [`'${propertyName}'`]), 'FgRed')];
+      switch (type) {
         case 'added':
           return [...acc, makeColored(getMsg('propAdd', [`'${propertyName}'`, getPlainValue(value)]), 'FgGreen')];
+        case 'removed':
+          return [...acc, makeColored(getMsg('propRemove', [`'${propertyName}'`]), 'FgRed')];
         case 'updated': {
           const [value1, value2] = value;
           return [...acc, getMsg(
@@ -47,12 +47,13 @@ export default (diffObject, inColor) => {
               makeColored(getPlainValue(value2), 'FgGreen')],
           )];
         }
+        case 'changed-object':
+          return [...acc, iter(value, [...path, key])];
+        case 'root':
+          return [...acc, iter(value, path)];
         default:
-          if (Array.isArray(value)) {
-            return [...acc, iter(value, [...path, key])];
-          }
+          return [...acc];
       }
-      return [...acc];
     }, []).flat()
   );
   return iter(diffObject).join('\n');

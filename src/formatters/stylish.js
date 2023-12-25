@@ -1,52 +1,81 @@
 import _ from 'lodash';
-import { getDiffItem } from '../objects.js';
-import * as colors from './colors.js';
+import * as colors from '../colors.js';
 
 const shiftCount = 4;
 const shiftChar = ' ';
 
-const diffStateMap = new Map([['added', '+'], ['removed', '-']]);
-const getDiffChar = (state) => diffStateMap.get(state);
-const getColorStrBegin = (inColor, diffChar) => {
-  if (inColor && diffChar) {
-    return diffChar === '+' ? colors.FgGreen : colors.FgRed;
-  }
-  return '';
-};
-
 export default (diffObject, inColor) => {
-  const iter = (iterNode, depth) => (
-    iterNode.flatMap((item) => {
-      const { key, value, state } = item;
-      if (state === 'updated') {
-        const [value1, value2] = value;
-        return [getDiffItem(key, value1, 'removed'), getDiffItem(key, value2, 'added')];
+  const endColorStr = inColor ? colors.Reset : '';
+  const getFormattedValueArr = (iterFn, value, depth, shiftStr, beginStr, endStr) => {
+    if (_.isObject(value)) {
+      const isArray = Array.isArray(value);
+      const beginBracket = isArray ? '{' : '[';
+      const endBracket = isArray ? '}' : ']';
+      return [
+        `${beginStr}${beginBracket}`,
+        iterFn(isArray ? value : value.array, depth + 1),
+        `${shiftStr}${endBracket}${endStr}`,
+      ];
+    }
+    const valueStr = value === null ? 'null' : value.toString();
+    return [`${beginStr}${valueStr}${endStr}`];
+  };
+  const iter = (iterNode, depth) => {
+    const shiftStr = shiftChar.repeat(depth * shiftCount);
+    const shiftStrCropped = shiftStr.slice(2);
+    return iterNode.reduce((acc, { key, value, type }) => {
+      const keyStr = `${key}: `;
+      switch (type) {
+        case 'added': {
+          const beginStr = `${shiftStrCropped}${inColor ? colors.FgGreen : ''}+ ${keyStr}`;
+          return [
+            ...acc,
+            ...getFormattedValueArr(iter, value, depth, shiftStr, beginStr, endColorStr),
+          ];
+        }
+        case 'removed': {
+          const beginStr = `${shiftStrCropped}${inColor ? colors.FgRed : ''}- ${keyStr}`;
+          return [
+            ...acc,
+            ...getFormattedValueArr(iter, value, depth, shiftStr, beginStr, endColorStr),
+          ];
+        }
+        case 'updated': {
+          const [value1, value2] = value;
+          const beginStr1 = `${shiftStrCropped}${inColor ? colors.FgRed : ''}- ${keyStr}`;
+          const beginStr2 = `${shiftStrCropped}${inColor ? colors.FgGreen : ''}+ ${keyStr}`;
+          return [
+            ...acc,
+            ...getFormattedValueArr(iter, value1, depth, shiftStr, beginStr1, endColorStr),
+            ...getFormattedValueArr(iter, value2, depth, shiftStr, beginStr2, endColorStr),
+          ];
+        }
+        case 'nested':
+        case 'unchanged': {
+          const beginStr = `${shiftStr}${keyStr}`;
+          return [...acc, ...getFormattedValueArr(iter, value, depth, shiftStr, beginStr, '')];
+        }
+        case 'array-item':
+          return [
+            ...acc,
+            `${shiftStr}${value}`,
+          ];
+        case 'changed-object':
+          return [
+            ...acc,
+            `${shiftStr}${keyStr}{`,
+            iter(value, depth + 1),
+            `${shiftStr}}`,
+          ];
+        default: // type = root
+          return [
+            ...acc,
+            '{',
+            iter(value, depth + 1),
+            '}',
+          ];
       }
-      return item;
-    }).reduce((acc, { key, value, state }) => {
-      const diffChar = getDiffChar(state);
-      const diffStr = depth > 0 ? `${diffChar || shiftChar}${diffChar ? ' ' : shiftChar}` : '';
-      const fullShiftCount = depth * shiftCount;
-      const shiftStr = depth > 0 ? shiftChar.repeat(fullShiftCount - diffStr.length) : '';
-      const keyStr = key ? `${key}: ` : '';
-      const colorStrBegin = getColorStrBegin(inColor, diffChar);
-      const colorStrEnd = colorStrBegin ? colors.Reset : '';
-      const startLineStr = `${shiftStr}${colorStrBegin}${diffStr}${keyStr}`;
-      if (_.isObject(value)) {
-        const isArray = Array.isArray(value);
-        const bracketBegin = isArray ? '{' : '[';
-        const bracketEnd = isArray ? '}' : ']';
-        return [
-          ...acc,
-          `${startLineStr}${bracketBegin}`,
-          iter(isArray ? value : value.array, depth + 1),
-          `${shiftChar.repeat(fullShiftCount)}${bracketEnd}${colorStrEnd}`,
-        ];
-      }
-      const valueStr = value === null ? 'null' : value.toString();
-      return [...acc, `${startLineStr}${valueStr}${colorStrEnd}`];
-    }, []).flat()
-  );
-
-  return iter([getDiffItem('', diffObject, 0, '')], 0).join('\n');
+    }, []).flat();
+  };
+  return iter(diffObject, 0).join('\n');
 };
