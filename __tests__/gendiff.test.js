@@ -7,6 +7,7 @@ import {
   testDiffTextStylishColored,
   testDiffTextPlain,
   testDiffTextPlainColored,
+  testDiffTextJSON,
 } from '../__fixtures__/constants.js';
 
 test('gendiff absolute path success', () => {
@@ -33,6 +34,10 @@ test('gendiff format plain colored', () => {
   expect(genDiff(`${dirR}file1.json`, `${dirR}file2.json`, 'plain', true)).toEqual(testDiffTextPlainColored);
 });
 
+test('gendiff format type json', () => {
+  expect(genDiff(`${dirR}file1.json`, `${dirR}file2.json`, 'json')).toEqual(testDiffTextJSON);
+});
+
 test('gendiff file1 not found', () => {
   expect(genDiff(`${dirA}file11.json`, `${dirA}file2.json`)).toBeNull();
 });
@@ -50,6 +55,7 @@ test('gendiff wrong files type', () => {
 test('gendiff wrong files content', () => {
   expect(genDiff(`${dirA}file1.json`, `${dirA}file_wrong.json`)).toBeNull();
   expect(genDiff(`${dirA}file_wrong.json`, `${dirA}file2.json`)).toBeNull();
+  expect(genDiff(`${dirA}file_wrong.yml`, `${dirA}file2.json`)).toBeNull();
 });
 
 test('gendiff wrong format', () => {
