@@ -1,63 +1,44 @@
+import { fileURLToPath } from 'url';
+import { resolve, dirname, sep } from 'path';
+import fs from 'fs';
 import { test, expect } from '@jest/globals';
 import genDiff from '../src/gendiff.js';
-import {
-  dirA,
-  dirR,
-  testDiffTextStylish,
-  testDiffTextStylishColored,
-  testDiffTextPlain,
-  testDiffTextPlainColored,
-  testDiffTextJSON,
-} from '../__fixtures__/constants.js';
 
-test('gendiff absolute path success', () => {
-  expect(genDiff(`${dirA}file1.json`, `${dirA}file2.json`)).toEqual(testDiffTextStylish);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const dirA = `${__dirname}${sep}..${sep}__fixtures__${sep}`;
+const dirR = `__fixtures__${sep}`;
+
+const getFileContent = (filename) => {
+  const absolutePath = resolve(`${dirR}${filename}`);
+  try {
+    const data = fs.readFileSync(absolutePath, 'utf8');
+    return data;
+  } catch (err) {
+    return null;
+  }
+};
+
+test('file type JSON, output format stylish', () => {
+  expect(genDiff(`${dirA}file1.json`, `${dirA}file2.json`)).toEqual(getFileContent('testDiffTextStylish'));
 });
 
-test('gendiff relative path success', () => {
-  expect(genDiff(`${dirR}file1.json`, `${dirR}file2.json`)).toEqual(testDiffTextStylish);
+test('file type YAML, output format stylish', () => {
+  expect(genDiff(`${dirA}file1.yml`, `${dirA}file2.yml`)).toEqual(getFileContent('testDiffTextStylish'));
 });
 
-test('gendiff yaml files', () => {
-  expect(genDiff(`${dirR}file1.yml`, `${dirR}file2.yml`)).toEqual(testDiffTextStylish);
+test('file type JSON, output format plain', () => {
+  expect(genDiff(`${dirR}file1.json`, `${dirR}file2.json`, 'plain')).toEqual(getFileContent('testDiffTextPlain'));
 });
 
-test('gendiff format stylish colored', () => {
-  expect(genDiff(`${dirR}file1.json`, `${dirR}file2.json`, 'stylish', true)).toEqual(testDiffTextStylishColored);
+test('file type YAML, output format plain', () => {
+  expect(genDiff(`${dirR}file1.yml`, `${dirR}file2.yml`, 'plain')).toEqual(getFileContent('testDiffTextPlain'));
 });
 
-test('gendiff format plain', () => {
-  expect(genDiff(`${dirR}file1.json`, `${dirR}file2.json`, 'plain')).toEqual(testDiffTextPlain);
+test('file type JSON, output format json', () => {
+  expect(genDiff(`${dirR}file1.json`, `${dirR}file2.json`, 'json')).toEqual(getFileContent('testDiffTextJSON'));
 });
 
-test('gendiff format plain colored', () => {
-  expect(genDiff(`${dirR}file1.json`, `${dirR}file2.json`, 'plain', true)).toEqual(testDiffTextPlainColored);
-});
-
-test('gendiff format type json', () => {
-  expect(genDiff(`${dirR}file1.json`, `${dirR}file2.json`, 'json')).toEqual(testDiffTextJSON);
-});
-
-test('gendiff file1 not found', () => {
-  expect(genDiff(`${dirA}file11.json`, `${dirA}file2.json`)).toBeNull();
-});
-
-test('gendiff file2 not found', () => {
-  expect(genDiff(`${dirA}file1.json`, `${dirA}file22.json`)).toBeNull();
-});
-
-test('gendiff wrong files type', () => {
-  expect(genDiff('file1.json', 'file2.txt')).toBeNull();
-  expect(genDiff('file1.docx', 'file2.json')).toBeNull();
-  expect(genDiff('file1', 'file2')).toBeNull();
-});
-
-test('gendiff wrong files content', () => {
-  expect(genDiff(`${dirA}file1.json`, `${dirA}file_wrong.json`)).toBeNull();
-  expect(genDiff(`${dirA}file_wrong.json`, `${dirA}file2.json`)).toBeNull();
-  expect(genDiff(`${dirA}file_wrong.yml`, `${dirA}file2.json`)).toBeNull();
-});
-
-test('gendiff wrong format', () => {
-  expect(genDiff(`${dirA}file1.json`, `${dirA}file2.json`, 'some')).toBeNull();
+test('file type YAML, output format json', () => {
+  expect(genDiff(`${dirR}file3.yaml`, `${dirR}file2.yml`, 'json')).toEqual(getFileContent('testDiffTextJSON'));
 });

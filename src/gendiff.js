@@ -2,7 +2,6 @@ import { getExt, getFileContent } from './filesystem.js';
 import getObjectsDiff from './objects.js';
 import formatDiffObject from './formatters/index.js';
 import parseData from './parsers/index.js';
-import getMsg from './message.js';
 
 const extMapping = {
   '.json': 'json',
@@ -14,7 +13,7 @@ const getFileType = (filepath) => {
   const ext = getExt(filepath).toLowerCase();
   const type = extMapping[ext];
   if (!type) {
-    console.log(getMsg('fileTypeError', ['json, yaml']));
+    console.log('Please use the following file types: json, yaml');
     return null;
   }
   return type;
@@ -31,6 +30,7 @@ const getObjectFromFile = (filepath) => {
   }
   const object = parseData(fileData, type);
   if (!object) {
+    console.log(`Incorrect ${type.toUpperCase()} content. Please check file: ${filepath}`);
     return null;
   }
   return object;

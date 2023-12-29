@@ -1,24 +1,12 @@
 import _ from 'lodash';
 
-const isObject = (item) => (
+const getSimpleDiffItem = (type, key, value) => (
+  { type, key, value }
+);
+
+export const isObject = (item) => (
   _.isObject(item) && !Array.isArray(item) && item !== null
 );
-
-const getDiffItem = (key, value, type) => (
-  { key, value, type }
-);
-
-const getObjectValue = (node) => {
-  if (isObject(node)) {
-    return Object.entries(node).reduce((acc, [key, value]) => (
-      [...acc, getDiffItem(key, getObjectValue(value), 'nested')]
-    ), []);
-  }
-  if (Array.isArray(node)) {
-    return { array: node.map((value) => getDiffItem('', getObjectValue(value), 'array-item')) };
-  }
-  return node;
-};
 
 export default (object1, object2) => {
   function iter(iterObject1, iterObject2) {
@@ -29,20 +17,26 @@ export default (object1, object2) => {
       const value1 = iterObject1[key];
       const value2 = iterObject2[key];
       if (!keys1.includes(key)) {
-        return [...acc, getDiffItem(key, getObjectValue(value2), 'added')];
+        return [...acc, getSimpleDiffItem('added', key, value2)];
       }
       if (!keys2.includes(key)) {
-        return [...acc, getDiffItem(key, getObjectValue(value1), 'removed')];
+        return [...acc, getSimpleDiffItem('removed', key, value1)];
       }
       if (_.isEqual(value1, value2)) {
-        return [...acc, getDiffItem(key, getObjectValue(value1), 'unchanged')];
+        return [...acc, getSimpleDiffItem('unchanged', key, value1)];
       }
       if (isObject(value1) && isObject(value2)) {
-        return [...acc, getDiffItem(key, iter(value1, value2), 'changed-object')];
+        return [...acc, { type: 'nested', key, children: iter(value1, value2) }];
       }
-      return [...acc, getDiffItem(key, [getObjectValue(value1), getObjectValue(value2)], 'updated')];
+      return [...acc, {
+        type: 'updated',
+        key,
+        oldValue: value1,
+        newValue: value2,
+      }];
     }, []);
     return result;
   }
-  return [getDiffItem('', iter(object1, object2), 'root')];
+
+  return [{ type: 'root', children: iter(object1, object2) }];
 };

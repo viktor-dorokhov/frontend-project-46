@@ -1,81 +1,90 @@
-import _ from 'lodash';
 import * as colors from '../colors.js';
+import { isObject } from '../objects.js';
 
 const shiftCount = 4;
 const shiftChar = ' ';
 
+const getFormattedNode = (key, value, depth, prefix = '', beginColorStr = '') => {
+  const shiftStr = shiftChar.repeat(depth * shiftCount);
+  const shiftStrCropped = shiftStr.slice(prefix.length);
+  const beginStr = `${shiftStrCropped}${beginColorStr}${prefix}${key}: `;
+  const endColorStr = beginColorStr ? colors.Reset : '';
+  if (isObject(value)) {
+    const valueKeys = Object.keys(value);
+    return [
+      `${beginStr}{`,
+      ...valueKeys.reduce((valueAcc, valueKey) => [
+        ...valueAcc,
+        getFormattedNode(valueKey, value[valueKey], depth + 1),
+      ], []).flat(),
+      `${shiftStr}}${endColorStr}`,
+    ];
+  }
+  if (Array.isArray(value)) {
+    return [`${beginStr}[${value.join(', ')}]${endColorStr}`];
+  }
+  const valueStr = value === null ? 'null' : value.toString();
+  return [`${beginStr}${valueStr}${endColorStr}`];
+};
+
 export default (diffObject, inColor) => {
-  const endColorStr = inColor ? colors.Reset : '';
-  const getFormattedValueArr = (iterFn, value, depth, shiftStr, beginStr, endStr) => {
-    if (_.isObject(value)) {
-      const isArray = Array.isArray(value);
-      const beginBracket = isArray ? '{' : '[';
-      const endBracket = isArray ? '}' : ']';
-      return [
-        `${beginStr}${beginBracket}`,
-        iterFn(isArray ? value : value.array, depth + 1),
-        `${shiftStr}${endBracket}${endStr}`,
-      ];
-    }
-    const valueStr = value === null ? 'null' : value.toString();
-    return [`${beginStr}${valueStr}${endStr}`];
-  };
-  const iter = (iterNode, depth) => {
-    const shiftStr = shiftChar.repeat(depth * shiftCount);
-    const shiftStrCropped = shiftStr.slice(2);
-    return iterNode.reduce((acc, { key, value, type }) => {
-      const keyStr = `${key}: `;
+  const iter = (iterNode, depth) => (
+    iterNode.reduce((acc, node) => {
+      const { key, type } = node;
       switch (type) {
         case 'added': {
-          const beginStr = `${shiftStrCropped}${inColor ? colors.FgGreen : ''}+ ${keyStr}`;
+          const { value } = node;
           return [
             ...acc,
-            ...getFormattedValueArr(iter, value, depth, shiftStr, beginStr, endColorStr),
+            ...getFormattedNode(key, value, depth, '+ ', inColor ? colors.FgGreen : ''),
           ];
         }
         case 'removed': {
-          const beginStr = `${shiftStrCropped}${inColor ? colors.FgRed : ''}- ${keyStr}`;
+          const { value } = node;
           return [
             ...acc,
-            ...getFormattedValueArr(iter, value, depth, shiftStr, beginStr, endColorStr),
+            ...getFormattedNode(key, value, depth, '- ', inColor ? colors.FgRed : ''),
           ];
         }
         case 'updated': {
-          const [value1, value2] = value;
-          const beginStr1 = `${shiftStrCropped}${inColor ? colors.FgRed : ''}- ${keyStr}`;
-          const beginStr2 = `${shiftStrCropped}${inColor ? colors.FgGreen : ''}+ ${keyStr}`;
+          const { oldValue, newValue } = node;
           return [
             ...acc,
-            ...getFormattedValueArr(iter, value1, depth, shiftStr, beginStr1, endColorStr),
-            ...getFormattedValueArr(iter, value2, depth, shiftStr, beginStr2, endColorStr),
+            ...getFormattedNode(key, oldValue, depth, '- ', inColor ? colors.FgRed : ''),
+            ...getFormattedNode(key, newValue, depth, '+ ', inColor ? colors.FgGreen : ''),
           ];
         }
-        case 'nested':
         case 'unchanged': {
-          const beginStr = `${shiftStr}${keyStr}`;
-          return [...acc, ...getFormattedValueArr(iter, value, depth, shiftStr, beginStr, '')];
-        }
-        case 'array-item':
+          const { value } = node;
           return [
             ...acc,
-            `${shiftStr}${value}`,
+            ...getFormattedNode(key, value, depth),
           ];
-        case 'changed-object':
+        }
+        case 'nested': {
+          const { children } = node;
+          const shiftStr = shiftChar.repeat(depth * shiftCount);
           return [
             ...acc,
-            `${shiftStr}${keyStr}{`,
-            iter(value, depth + 1),
+            `${shiftStr}${key}: {`,
+            iter(children, depth + 1),
             `${shiftStr}}`,
           ];
-        default: // type = root
+        }
+        case 'root': {
+          const { children } = node;
           return [
             ...acc,
             '{',
-            iter(value, depth + 1),
+            iter(children, depth + 1),
             '}',
           ];
+        }
+        default:
+          return [...acc];
       }
-    }, []).flat();
-  };
+    }, []).flat()
+  );
+
   return iter(diffObject, 0).join('\n');
 };

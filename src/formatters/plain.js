@@ -1,26 +1,34 @@
 import _ from 'lodash';
 import * as colors from '../colors.js';
-import getMsg from '../message.js';
 
-const getPlainValue = (value) => {
-  if (value === null) {
-    return 'null';
-  }
-  if (_.isObject(value)) {
-    return '[complex value]';
-  }
-  const type = typeof value;
-  if (type === 'string') {
-    return `'${value}'`;
-  }
-  return value.toString();
+const messages = {
+  added: 'Property %1 was added with value: %2',
+  removed: 'Property %1 was removed',
+  updated: 'Property %1 was updated. From %2 to %3',
 };
+
+const getMsg = (code, values) => (
+  values.reduce((acc, str, index) => acc.replace(`%${index + 1}`, str), messages[code])
+);
 
 const getPropertyName = (key, path) => {
   if (path.length === 0) {
     return key;
   }
   return [path.join('.'), key].join('.');
+};
+
+const getFormattedValue = (value) => {
+  if (value === null) {
+    return 'null';
+  }
+  if (_.isObject(value)) {
+    return '[complex value]';
+  }
+  if (typeof value === 'string') {
+    return `'${value}'`;
+  }
+  return value.toString();
 };
 
 export default (diffObject, inColor) => {
@@ -30,31 +38,39 @@ export default (diffObject, inColor) => {
     }
     return str;
   };
-  const iter = (iterNode, path = []) => (
-    iterNode.reduce((acc, { key, value, type }) => {
+  const iter = (iterObject, path = []) => (
+    iterObject.reduce((acc, node) => {
+      const { key, type } = node;
       const propertyName = getPropertyName(key, path);
       switch (type) {
-        case 'added':
-          return [...acc, makeColored(getMsg('propAdd', [`'${propertyName}'`, getPlainValue(value)]), 'FgGreen')];
+        case 'added': {
+          const { value } = node;
+          return [...acc, makeColored(getMsg(type, [`'${propertyName}'`, getFormattedValue(value)]), 'FgGreen')];
+        }
         case 'removed':
-          return [...acc, makeColored(getMsg('propRemove', [`'${propertyName}'`]), 'FgRed')];
+          return [...acc, makeColored(getMsg(type, [`'${propertyName}'`]), 'FgRed')];
         case 'updated': {
-          const [value1, value2] = value;
+          const { oldValue, newValue } = node;
           return [...acc, getMsg(
-            'propUpdate',
+            type,
             [`'${propertyName}'`,
-              makeColored(getPlainValue(value1), 'FgRed'),
-              makeColored(getPlainValue(value2), 'FgGreen')],
+              makeColored(getFormattedValue(oldValue), 'FgRed'),
+              makeColored(getFormattedValue(newValue), 'FgGreen')],
           )];
         }
-        case 'changed-object':
-          return [...acc, iter(value, [...path, key])];
-        case 'root':
-          return [...acc, iter(value, path)];
+        case 'nested': {
+          const { children } = node;
+          return [...acc, iter(children, [...path, key])];
+        }
+        case 'root': {
+          const { children } = node;
+          return [...acc, iter(children, path)];
+        }
         default:
           return [...acc];
       }
     }, []).flat()
   );
+
   return iter(diffObject).join('\n');
 };

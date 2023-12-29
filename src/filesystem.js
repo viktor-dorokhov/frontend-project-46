@@ -1,6 +1,5 @@
 import path from 'path';
 import fs from 'fs';
-import getMsg from './message.js';
 
 export const getFileContent = (filepath) => {
   const absolutePath = path.isAbsolute(filepath) ? filepath : path.resolve(filepath);
@@ -8,7 +7,7 @@ export const getFileContent = (filepath) => {
     const data = fs.readFileSync(absolutePath, 'utf8');
     return data;
   } catch (err) {
-    console.log(getMsg('fileError', [filepath]));
+    console.log(`The file cannot be opened: ${filepath}`);
     return null;
   }
 };
