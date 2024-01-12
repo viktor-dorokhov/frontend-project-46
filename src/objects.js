@@ -38,5 +38,5 @@ export default (object1, object2) => {
     return result;
   }
 
-  return [{ type: 'root', children: iter(object1, object2) }];
+  return { type: 'root', children: iter(object1, object2) };
 };

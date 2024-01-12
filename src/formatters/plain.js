@@ -38,39 +38,30 @@ export default (diffObject, inColor) => {
     }
     return str;
   };
+  const lineFeed = '\n';
   const iter = (iterObject, path = []) => (
     iterObject.reduce((acc, node) => {
-      const { key, type } = node;
-      const propertyName = getPropertyName(key, path);
-      switch (type) {
-        case 'added': {
-          const { value } = node;
-          return [...acc, makeColored(getMsg(type, [`'${propertyName}'`, getFormattedValue(value)]), 'FgGreen')];
-        }
+      const propertyName = getPropertyName(node.key, path);
+      switch (node.type) {
+        case 'added':
+          return acc.concat(lineFeed, makeColored(getMsg(node.type, [`'${propertyName}'`, getFormattedValue(node.value)]), 'FgGreen'));
         case 'removed':
-          return [...acc, makeColored(getMsg(type, [`'${propertyName}'`]), 'FgRed')];
+          return acc.concat(lineFeed, makeColored(getMsg(node.type, [`'${propertyName}'`]), 'FgRed'));
         case 'updated': {
-          const { oldValue, newValue } = node;
-          return [...acc, getMsg(
-            type,
+          return acc.concat(lineFeed, getMsg(
+            node.type,
             [`'${propertyName}'`,
-              makeColored(getFormattedValue(oldValue), 'FgRed'),
-              makeColored(getFormattedValue(newValue), 'FgGreen')],
-          )];
+              makeColored(getFormattedValue(node.oldValue), 'FgRed'),
+              makeColored(getFormattedValue(node.newValue), 'FgGreen')],
+          ));
         }
-        case 'nested': {
-          const { children } = node;
-          return [...acc, iter(children, [...path, key])];
-        }
-        case 'root': {
-          const { children } = node;
-          return [...acc, iter(children, path)];
-        }
+        case 'nested':
+          return acc.concat(iter(node.children, [...path, node.key]));
         default:
-          return [...acc];
+          return acc;
       }
-    }, []).flat()
+    }, '')
   );
 
-  return iter(diffObject).join('\n');
+  return iter(diffObject.children).slice(1);
 };
