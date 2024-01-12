@@ -74,4 +74,4 @@ gendiff file1.yml file2.yml
 
 ## Демо:
 
-[![asciicast](https://asciinema.org/a/629272.svg)](https://asciinema.org/a/629272)
+[![asciicast](https://asciinema.org/a/631081.svg)](https://asciinema.org/a/631081)
